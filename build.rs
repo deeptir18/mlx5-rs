@@ -12,6 +12,26 @@ fn main() {
     let cargo_manifest_dir = env::var("CARGO_MANIFEST_DIR").unwrap();
     let cargo_dir = Path::new(&cargo_manifest_dir);
     let out_dir = env::var("OUT_DIR").unwrap();
+
+    // build submodules
+
+    let rdma_core = Path::new(&cargo_dir).join("mlx5-wrapper").join("rdma-core");
+
+    std::process::Command::new("./build.sh")
+        .env(
+            "EXTRA_CMAKE_FLAGS",
+            "-DENABLE_STATIC=1 -DCMAKE_C_FLAGS=\"-fPIC\"",
+        )
+        .env("MAKEFLAGS", "-j$CORES")
+        .current_dir(rdma_core)
+        .output()
+        .expect("failed to build rdma core");
+
+    std::process::Command::new(format!("make"))
+        .args(["-C", "mlx5-wrapper", "CONFIG_MLX5=y"])
+        .output()
+        .expect("Failed to build mlx5wrapper");
+
     println!(
         "cargo:rerun-if-changed={:?}",
         Path::new(&cargo_dir)
