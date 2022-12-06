@@ -279,10 +279,16 @@ int custom_mlx5_alloc_and_register_tx_pool(struct custom_mlx5_per_thread_context
     return 0;
 }
 
-uint16_t custom_mlx5_refcnt_read(struct registered_mempool *mempool,
+uint8_t custom_mlx5_refcnt_read(struct registered_mempool *mempool,
         size_t refcnt_index) {
     struct custom_mlx5_mempool *data_mempool = &mempool->data_mempool;
     return __atomic_load_n(&data_mempool->ref_counts[refcnt_index], __ATOMIC_RELAXED);
+}
+
+void custom_mlx5_refcnt_set(struct registered_mempool *mempool,
+        size_t refcnt_index, uint8_t refcnt) {
+    struct custom_mlx5_mempool *data_mempool = &mempool->data_mempool;
+    __atomic_store_n(&data_mempool->ref_counts[refcnt_index], refcnt, __ATOMIC_RELAXED);
 }
 
 int custom_mlx5_refcnt_update_or_free(struct registered_mempool *mempool, 

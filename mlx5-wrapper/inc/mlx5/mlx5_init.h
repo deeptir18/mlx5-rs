@@ -90,8 +90,10 @@ int custom_mlx5_alloc_and_register_tx_pool(struct custom_mlx5_per_thread_context
                                                         int registry_flags,
                                                         uint32_t use_atomic_ops);
 /* Atomically read refcnt */
-uint16_t custom_mlx5_refcnt_read(struct registered_mempool *mempool,
+uint8_t custom_mlx5_refcnt_read(struct registered_mempool *mempool,
         size_t refcnt_index);
+
+void custom_mlx5_refcnt_set(struct registered_mempool *mempool, size_t refcnt_index, uint8_t refcnt);
 
 /* Decrement reference count or return buffer to mempool. */
 int custom_mlx5_refcnt_update_or_free(struct registered_mempool *mempool, 
