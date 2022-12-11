@@ -27,10 +27,17 @@ fn main() {
         .output()
         .expect("failed to build rdma core");
 
-    std::process::Command::new(format!("make"))
-        .args(["-C", "mlx5-wrapper", "CONFIG_MLX5=y"])
-        .output()
-        .expect("Failed to build mlx5wrapper");
+    if cfg!(feature = "debug_build") {
+        std::process::Command::new(format!("make"))
+            .args(["-C", "mlx5-wrapper", "CONFIG_MLX5=y", "CONFIG_DEBUG=y"])
+            .output()
+            .expect("Failed to build mlx5wrapper");
+    } else {
+        std::process::Command::new(format!("make"))
+            .args(["-C", "mlx5-wrapper", "CONFIG_MLX5=y"])
+            .output()
+            .expect("Failed to build mlx5wrapper");
+    }
 
     println!(
         "cargo:rerun-if-changed={:?}",
