@@ -29,7 +29,7 @@ fn main() {
 
     if cfg!(feature = "debug_build") {
         std::process::Command::new(format!("make"))
-            .args(["-C", "mlx5-wrapper", "CONFIG_MLX5=y", "CONFIG_DEBUG=y"])
+            .args(["-C", "mlx5-wrapper", "CONFIG_MLX5=y", "DEBUG=y"])
             .output()
             .expect("Failed to build mlx5wrapper");
     } else {

@@ -23,5 +23,6 @@ cc = "1.0.63"
 
 [features]
 default = []
+debug_build = []
 mlx5 = []
 profiler = ["demikernel"]
